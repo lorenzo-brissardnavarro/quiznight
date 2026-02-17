@@ -17,6 +17,8 @@ class User extends BDD {
         $this->role = $role;
     }
 
+    // ------------------------------------- Inscription ------------------------------------------
+
     // Vérification validité données inscription utilisateur
     private function field_verification(){
         if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
@@ -61,6 +63,26 @@ class User extends BDD {
             return $validation;
         }
         return $this->recording();
+    }
+
+
+    // ------------------------------------- Connexion ------------------------------------------
+
+    // Récupération des informations d'un utilisateur
+    private function user_by_email(){
+        $sql = "SELECT * FROM user WHERE email = :email";
+        $query = $this->pdo->prepare($sql);
+        $query->execute([':email' => $this->email]);
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Verification validité données
+    public function log_in() {
+        $user = $this->user_by_email();
+        if ($user === false || !password_verify($this->password, $user["password"])) {
+            return "Identifiant ou mot de passe incorrect";
+        }
+        return $user;
     }
 
 }
