@@ -4,6 +4,7 @@ require_once '../config/bdd.php';
 
 class User extends BDD {
 
+    private int $id;
     private string $email;
     private string $password;
     private string $confirm_password;
@@ -82,7 +83,25 @@ class User extends BDD {
         if ($user === false || !password_verify($this->password, $user["password"])) {
             return "Identifiant ou mot de passe incorrect";
         }
+        $this->id = $user['id'];
         return $user;
+    }
+
+
+    // ------------------------------------- Role Admin ------------------------------------------
+
+    // Récupération informations utilisateur par ID
+    private function get_information_user($id){
+        $sql = "SELECT * FROM user WHERE id = :id";
+        $query = $this->pdo->prepare($sql);
+        $query->execute([':id' => $id]);
+        return $query->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Fonction pour déterminer si l'utilisateur est un administrateur
+    public function is_admin(): bool{
+        $data = $this->get_information_user($this->id);
+        return $data["role"] === "admin";
     }
 
 }
