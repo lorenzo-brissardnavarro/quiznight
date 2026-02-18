@@ -60,6 +60,7 @@ class Quiz extends BDD {
 
     // -------------------------------------- Méthodes CRUD ------------------------------------
 
+    // Fonction pour créer un quiz dans BDD
     public function create(): bool {
         $sql = "INSERT INTO quiz (titre, description, image, difficulte) VALUES (:titre, :description, :image, :difficulte)";
         $query = $this->pdo->prepare($sql);
@@ -70,6 +71,7 @@ class Quiz extends BDD {
         return $success;
     }
 
+    // Fonction pour modifier un quiz dans BDD
     public function update(): bool {
         if (!$this->id) {
             return false;
@@ -79,6 +81,7 @@ class Quiz extends BDD {
         return $query->execute([':titre' => $this->titre,':description' => $this->description,':image' => $this->image,':difficulte' => $this->difficulte,':id' => $this->id]);
     }
 
+    // Fonction pour supprimer un quiz dans BDD
     public function delete(): bool {
         if (!$this->id) {
             return false;
@@ -97,6 +100,7 @@ class Quiz extends BDD {
 
     // -------------------------------------- Autres méthodes ------------------------------------
 
+    // Fonction pour récupérer tous les quiz de la BDD
     public static function getAll(): array {
         $bdd = new BDD();
         $sql = "SELECT * FROM quiz";
@@ -108,6 +112,7 @@ class Quiz extends BDD {
         return $quizList;
     }
 
+    // Fonction pour récupérer un quiz de la BDD à partir de son id
     public static function getById(int $id): ?Quiz {
         $bdd = new BDD();
         $sql = "SELECT * FROM quiz WHERE id = :id";
@@ -120,6 +125,7 @@ class Quiz extends BDD {
         return new Quiz($row['titre'],$row['description'],$row['image'],$row['difficulte'],$row['id']);
     }
 
+    // Fonction pour compter le nombre de questions qu quiz
     public function countQuestions(): int {
         if (!$this->id) {
             return 0;
@@ -131,6 +137,7 @@ class Quiz extends BDD {
         return (int)$result['total'];
     }
 
+    // Fonction pour vérifier l'image ajoutée par l'utilisateur
     public function imageProcessing(array $files): bool {
         if (!isset($files["image"]) || $files["image"]["error"] !== 0) {
             return false;
