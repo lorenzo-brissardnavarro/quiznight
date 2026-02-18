@@ -3,83 +3,147 @@ require_once '../config/bdd.php';
 
 class Quiz extends BDD {
 
-    private int $id;
+    private ?int $id;
     private string $titre;
     private string $description;
     private string $image;
     private string $difficulte;
 
-    public function __construct(string $titre, string $description, string $difficulte){
+    public function __construct(string $titre, string $description, string $image, string $difficulte, ?int $id = null){
         parent::__construct();
+        $this->id = $id;
         $this->titre = $titre;
         $this->description = $description;
+        $this->image = $image;
         $this->difficulte = $difficulte;
     }
 
-    private setImage($newImage): void{
+    // -------------------------------------- Getters ------------------------------------
+
+    public function getId(): ?int {
+        return $this->id;
+    }
+
+    public function getTitre(): string {
+        return $this->titre;
+    }
+
+    public function getDescription(): string {
+        return $this->description;
+    }
+
+    public function getImage(): string {
+        return $this->image;
+    }
+
+    public function getDifficulte(): string {
+        return $this->difficulte;
+    }
+
+    // -------------------------------------- Setters ------------------------------------
+
+    public function setTitre(string $newTitre): void {
+        $this->titre = $newTitre;
+    }
+
+    public function setDescription(string $newDescription): void {
+        $this->description = $newDescription;
+    }
+
+    public function setImage(string $newImage): void {
         $this->image = $newImage;
     }
 
-    // Fonction pour enregistrer les informations du quiz en BDD
-    public function create(): bool{
+    public function setDifficulte(string $newDifficulte): void {
+        $this->difficulte = $newDifficulte;
+    }
+
+    // -------------------------------------- Méthodes CRUD ------------------------------------
+
+    public function create(): bool {
         $sql = "INSERT INTO quiz (titre, description, image, difficulte) VALUES (:titre, :description, :image, :difficulte)";
         $query = $this->pdo->prepare($sql);
-        return $query->execute([':titre' => $this->titre, ':description' => $this->description, ':image' => $this->image, ':difficulte' => $this->difficulte]);
+        $success = $query->execute([':titre' => $this->titre, ':description' => $this->description, ':image' => $this->image, ':difficulte' => $this->difficulte]);
+        if ($success) {
+            $this->id = $this->pdo->lastInsertId();
+        }
+        return $success;
     }
 
-    // Fonction pour modifier les informaions du quiz en BDD
-    public function update(): bool{
+    public function update(): bool {
+        if (!$this->id) {
+            return false;
+        }
         $sql = "UPDATE quiz SET titre = :titre, description = :description, image = :image, difficulte = :difficulte WHERE id = :id";
         $query = $this->pdo->prepare($sql);
-        return $query->execute([':titre' => $this->titre, ':description' => $this->description, ':image' => $this->image, ':difficulte' => $this->difficulte, ':id' => $this->id]);
+        return $query->execute([':titre' => $this->titre,':description' => $this->description,':image' => $this->image,':difficulte' => $this->difficulte,':id' => $this->id]);
     }
 
-    // Fonction pour supprimer un quiz en BDD
     public function delete(): bool {
+        if (!$this->id) {
+            return false;
+        }
         $sql = "DELETE FROM quiz WHERE id = :id";
         $query = $this->pdo->prepare($sql);
-        return $query->execute([':id' => $this->id]);
+        $success = $query->execute([':id' => $this->id]);
+        if($success){
+            $filePath = '../images/' . $this->image;
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+        return $success;
     }
 
-    // Récupérer l'ensemble des quiz de la BDD
-    public function getAll(): array {
+    // -------------------------------------- Autres méthodes ------------------------------------
+
+    public static function getAll(): array {
+        $bdd = new BDD();
         $sql = "SELECT * FROM quiz";
-        $query = $this->pdo->prepare($sql);
-        $query->execute();
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $query = $bdd->pdo->query($sql);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $quizList = [];
+        foreach ($results as $row) {
+            $quizList[] = new Quiz($row['titre'],$row['description'],$row['image'],$row['difficulte'],$row['id'])};
+        return $quizList;
     }
-    
-    // Récupérer un seul quiz de la BDD à partir d'un id
-    public function getById(int $id): array {
+
+    public static function getById(int $id): ?Quiz {
+        $bdd = new BDD();
         $sql = "SELECT * FROM quiz WHERE id = :id";
-        $query = $this->pdo->prepare($sql);
+        $query = $bdd->pdo->prepare($sql);
         $query->execute([':id' => $id]);
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $row = $query->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+        return new Quiz($row['titre'],$row['description'],$row['image'],$row['difficulte'],$row['id']);
     }
 
-    
-    public function count_questions(): int{
-        $sql = "SELECT COUNT(*) FROM questions INNER JOIN quiz ON questions.idQuiz = quiz.id WHERE idQuiz = :idQuiz";
-        $query = $pdo->prepare($sql);
+    public function countQuestions(): int {
+        if (!$this->id) {
+            return 0;
+        }
+        $sql = "SELECT COUNT(*) as total FROM questions WHERE idQuiz = :idQuiz";
+        $query = $this->pdo->prepare($sql);
         $query->execute([':idQuiz' => $this->id]);
-        return $query->fetchAll(PDO::FETCH_ASSOC);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        return (int)$result['total'];
     }
 
-    public image_processing($files): bool{
+    public function imageProcessing(array $files): bool {
+        if (!isset($files["image"]) || $files["image"]["error"] !== 0) {
+            return false;
+        }
         $file_basename  = pathinfo($files["image"]["name"], PATHINFO_FILENAME);
         $file_extension = pathinfo($files["image"]["name"], PATHINFO_EXTENSION);
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+        if (!in_array(strtolower($file_extension), $allowedExtensions)) {
+            return false;
+        }
         $new_image_name = $file_basename . '_' . date('Ymd_His') . '.' . $file_extension;
         move_uploaded_file($files["image"]["tmp_name"], '../images/' . $new_image_name);
         $this->setImage($new_image_name);
         return true;
     }
-
-
 }
-
-
-
-
-
-
-?>
