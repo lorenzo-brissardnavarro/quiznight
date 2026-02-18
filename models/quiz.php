@@ -153,4 +153,22 @@ class Quiz extends BDD {
         $this->setImage($new_image_name);
         return true;
     }
+
+    // -------------------------------------- Méthodes pour lier Quiz et Question ------------------------------------
+
+    // Fonction pour récupérer les questions d'un quiz en particulier
+    public function getQuestions(): array{
+        if (!$this->id) {
+            return [];
+        }
+        $sql = "SELECT * FROM questions WHERE idQuiz = :idQuiz";
+        $query = $this->pdo->prepare($sql);
+        $query->execute([':idQuiz' => $this->id]);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $questionList = [];
+        foreach ($results as $row) {
+            $questionList[] = new Question($row['libelleQuestion'],$row['typeQuestion'],$row['idQuiz'],$row['id'])};
+        return $questionList;
+    }
+
 }
