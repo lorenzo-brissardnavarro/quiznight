@@ -12,7 +12,9 @@
 </head>
 <body>
     <header class="navbar">
-        <h1 class="logo">OtakuQuiz</h1>
+        <a href="accueil.php">
+            <h1 class="logo">OtakuQuiz</h1>
+        </a>
         <nav class="nav-links">
             <ul>
                 <?php 
