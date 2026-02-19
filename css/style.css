@@ -96,6 +96,11 @@ h3 {
   background-clip: text;
 }
 
+.nav-links ul{
+  display: flex;
+  align-items: center;
+}
+
 .nav-links a {
   margin-left: 20px;
   text-decoration: none;
@@ -385,6 +390,14 @@ form{
 
 .card-form .bottom-text a:hover {
   text-decoration: underline;
+}
+
+.form-error {
+    background-color: #f6e8e6;
+    color: #8b3a3a;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 /* =========================

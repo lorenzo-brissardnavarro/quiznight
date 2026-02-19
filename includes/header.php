@@ -1,3 +1,7 @@
+<?php
+require_once '../includes/init.php';
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -18,14 +22,22 @@
         <nav class="nav-links">
             <ul>
                 <?php 
-                if(!empty($_SESSION['id'])){
+                if(!empty($_SESSION['user_id'])){
                     echo '
                     <li>
                         <a href="accueil.php">
                             <i class="fa-solid fa-house"></i>
                         </a>
-                    </li>
-                    <li>
+                    </li>';
+                    if($_SESSION['role'] === "admin"){
+                         echo '
+                        <li>
+                            <a href="accueil.php">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                            </a>
+                        </li>';
+                    }
+                    echo '<li>
                         <a href="deconnexion.php">
                             <i class="fa-solid fa-right-from-bracket"></i>
                         </a>

@@ -1,5 +1,21 @@
 <?php
 include '../includes/header.php';
+require_once '../config/bdd.php';
+require_once '../models/user.php';
+
+$error = "";
+
+if (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['confirm-password'])) {
+    $user = new User($_POST['email'], $_POST['password']);
+    $result = $user->sign_up($_POST['confirm-password']);
+    if ($result === true) {
+        header("Location: connexion.php");
+        exit;
+    } else {
+        $error = $result;
+    }
+}
+
 
 
 ?>
@@ -10,7 +26,12 @@ include '../includes/header.php';
         </div>
         <h1>Inscription</h1>
         <p class="subtitle">Rejoins l’arène des otakus !</p>
-        <form>
+        <?php 
+        if (!empty($error)){
+            echo '<p class="form-error">' . $error .  '</p>';
+        }
+        ?>
+        <form method="POST" action=""> 
             <div class="form-group">
                 <div class="form-fiels">
                     <i class="fa-regular fa-envelope"></i>

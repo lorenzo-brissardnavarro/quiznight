@@ -1,6 +1,20 @@
 <?php
 include '../includes/header.php';
+require_once '../config/bdd.php';
+require_once '../models/user.php';
 
+$error = "";
+
+if (!empty($_POST['email']) && !empty($_POST['password'])) {
+    $user = new User($_POST['email'], $_POST['password']);
+    $result = $user->log_in();
+    if ($result === true) {
+        header("Location: accueil.php");
+        exit;
+    } else {
+        $error = $result;
+    }
+}
 
 ?>
 <section class="container-form">
@@ -10,7 +24,12 @@ include '../includes/header.php';
         </div>
         <h1>Connexion</h1>
         <p class="subtitle">Viens prouver ta valeur d'otaku !</p>
-        <form>
+        <?php 
+        if (!empty($error)){
+            echo '<p class="form-error">' . $error .  '</p>';
+        }
+        ?>
+        <form method="POST" action="">
             <div class="form-group">
                 <div class="form-fiels">
                     <i class="fa-regular fa-envelope"></i>
