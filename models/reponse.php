@@ -98,7 +98,7 @@ class Reponse extends BDD {
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $reponses = [];
         foreach ($rows as $row) {
-            $reponses[] = new Reponses($row['libelleReponse'], $row['verite'], $row['idQuestion'], $row['id']);
+            $reponses[] = new Reponse($row['libelleReponse'], $row['verite'], $row['idQuestion'], $row['id']);
         }
         return $reponses;
     }
