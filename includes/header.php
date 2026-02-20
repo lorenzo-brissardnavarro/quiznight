@@ -32,7 +32,7 @@ require_once '../includes/init.php';
                     if($_SESSION['role'] === "admin"){
                          echo '
                         <li>
-                            <a href="accueil.php">
+                            <a href="dashboard.php">
                                 <i class="fa-solid fa-screwdriver-wrench"></i>
                             </a>
                         </li>';
