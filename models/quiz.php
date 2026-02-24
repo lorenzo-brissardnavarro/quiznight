@@ -113,6 +113,16 @@ class Quiz extends BDD {
         return $quizList;
     }
 
+    //Fonction pour compter le nombre total de quiz
+    public static function countAll(): int {
+        $bdd = new BDD();
+        $sql = "SELECT COUNT(*) AS total FROM quiz";
+        $query = $bdd->pdo->query($sql);
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+
+        return (int)$result['total'];
+    }
+
     // Fonction pour récupérer un quiz de la BDD à partir de son id
     public static function getById(int $id): ?Quiz {
         $bdd = new BDD();
