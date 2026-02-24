@@ -37,7 +37,7 @@
 
 body {
   font-family: 'Inter', sans-serif;
-  background: linear-gradient(160deg, #0f0f1a, #140f2a, #0b1a2e);
+  background: var(--black);
   color: var(--text);
   min-height: 100vh;
 }
@@ -122,6 +122,7 @@ h3 {
   flex-direction: column;
   align-items: center;
   padding: 80px 20px;
+  background: linear-gradient(160deg, #0f0f1a, #140f2a, #0b1a2e);
 }
 
 .hero-icons {
@@ -227,19 +228,19 @@ h3 {
   font-weight: 500;
 }
 
-.badge.easy {
+.facile {
   background: rgba(59, 130, 246, 0.2);
   color: var(--bleu);
   border: 1px solid var(--bleu);
 }
 
-.badge.medium {
+.moyen {
   background: rgba(124, 58, 237, 0.2);
   color: var(--violet);
   border: 1px solid var(--violet);
 }
 
-.badge.hard {
+.difficile {
   background: rgba(236, 72, 153, 0.2);
   color: var(--rose);
   border: 1px solid var(--rose);
@@ -286,7 +287,8 @@ form{
 .container-form{
   display: flex;
   justify-content: center;
-  margin-top: 2em;
+  padding: 2em 0;
+  background: linear-gradient(160deg, #0f0f1a, #140f2a, #0b1a2e);
 }
 
 .card-form {
@@ -393,11 +395,12 @@ form{
 }
 
 .form-error {
-    background-color: #f6e8e6;
-    color: #8b3a3a;
     padding: 12px;
     border-radius: 10px;
     margin-bottom: 20px;
+    background: rgba(236, 72, 153, 0.2);
+    color: var(--rose);
+    border: 1px solid var(--rose);
 }
 
 /* =========================
@@ -611,7 +614,7 @@ form{
 
 footer {
   padding: 30px 0;
-  margin: 60px 120px;
+  margin: 0 120px;
   color: var(--gris-clair);
   border-style: solid;
   border-width: 0;

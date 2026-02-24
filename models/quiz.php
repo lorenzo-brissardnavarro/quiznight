@@ -108,7 +108,8 @@ class Quiz extends BDD {
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $quizList = [];
         foreach ($results as $row) {
-            $quizList[] = new Quiz($row['titre'],$row['description'],$row['image'],$row['difficulte'],$row['id'])};
+            $quizList[] = new Quiz($row['titre'],$row['description'],$row['image'],$row['difficulte'],$row['id']);
+        }
         return $quizList;
     }
 
@@ -125,7 +126,7 @@ class Quiz extends BDD {
         return new Quiz($row['titre'],$row['description'],$row['image'],$row['difficulte'],$row['id']);
     }
 
-    // Fonction pour compter le nombre de questions qu quiz
+    // Fonction pour compter le nombre de questions du quiz
     public function countQuestions(): int {
         if (!$this->id) {
             return 0;
@@ -167,7 +168,8 @@ class Quiz extends BDD {
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $questionList = [];
         foreach ($results as $row) {
-            $questionList[] = new Question($row['libelleQuestion'],$row['typeQuestion'],$row['idQuiz'],$row['id'])};
+            $questionList[] = new Question($row['libelleQuestion'],$row['typeQuestion'],$row['idQuiz'],$row['id']);
+        }
         return $questionList;
     }
 
