@@ -38,6 +38,11 @@ if(isset($_GET['answer'])){
     $selected_answer_id = (int)$_GET['answer'];
 }
 
+if (!isset($_SESSION['quiz_score']) || $question_number === 0) {
+    $_SESSION['quiz_score'] = 0;
+    $_SESSION['answered'] = [];
+}
+
 
 $current_quiz = Quiz::getById($qcm_id);
 if (!$current_quiz) {
@@ -58,8 +63,15 @@ if ($selected_answer_id !== null) {
         if ($answer->getId() === $selected_answer_id) {
             if ($answer->getVerite()) {
                 $correction_text = "Bonne réponse !";
+                $newclass = " correct";
+                if (!isset($_SESSION['answered'][$question_number])) {
+                    $_SESSION['quiz_score']++;
+                    $_SESSION['answered'][$question_number] = true;
+                }
             } else {
                 $correction_text = "Mauvaise réponse.";
+                $newclass = " incorrect";
+                $_SESSION['answered'][$question_number] = true;
             }
         }
     }
@@ -75,7 +87,8 @@ if ($selected_answer_id !== null) {
         <div class="qcm-subtitle">
             <p>Question <?php echo $question_number + 1; ?> / <?php echo $current_quiz->countQuestions(); ?>
             </p>
-            <span class="qcm-score">Score : 0</span>
+            <span class="qcm-score">Score : <?php echo $_SESSION['quiz_score']; ?>
+</span>
         </div>
     </div>
     <div class="qcm-card">
@@ -115,13 +128,25 @@ if ($selected_answer_id !== null) {
     </div>
     <?php
     if ($correction_text !== null) {
-        echo '<div class="qcm-correction">
+        echo '<div class="qcm-correction ' . $newclass . '">
         <h3>' . $correction_text . '</h3>
+        <p>' . $current_question->getCorrection() . '</p>
         </div>';
         if ($question_number + 1 < $current_quiz->countQuestions()) {
             echo '<a class="qcm-next-btn" href="qcm.php?id=' . $qcm_id . '&number=' . ($question_number + 1) . '">Question suivante</a>';
         } else {
-            echo '<p>Voir mon score</p>';
+            $percentage = round(($_SESSION['quiz_score'] / $current_quiz->countQuestions()) * 100);
+            echo '<div class="end-game-modal">
+                    <div class="end-game-content">
+                        <h2>Quiz terminé !</h2>
+                        <p>Votre score final : <strong>' . $_SESSION['quiz_score'] . ' / ' . $current_quiz->countQuestions() . '</strong></p>
+                        <p>Soit ' . $percentage . '% de réussite</p>
+                        <a href="qcm.php?id=' . $qcm_id . '&number=0" class="btn btn-replay">Rejouer</a>
+                        <a href="accueil.php" class="btn btn-home">Retour à l\'accueil</a>
+                    </div>
+                </div>';
+            unset($_SESSION['answered']);
+            unset($_SESSION['quiz_score']);
         }
     }
     ?>

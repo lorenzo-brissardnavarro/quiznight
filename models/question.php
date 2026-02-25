@@ -9,11 +9,12 @@ class Question extends BDD {
     private string $typeQuestion;
     private int $idQuiz;
 
-    public function __construct(string $libelleQuestion, string $typeQuestion, int $idQuiz, ?int $id = null){
+    public function __construct(string $libelleQuestion, string $typeQuestion, string $correction, int $idQuiz, ?int $id = null){
         parent::__construct();
         $this->id = $id;
         $this->libelleQuestion = $libelleQuestion;
         $this->typeQuestion = $typeQuestion;
+        $this->correction = $correction;
         $this->idQuiz = $idQuiz;
     }
 
@@ -31,6 +32,10 @@ class Question extends BDD {
         return $this->typeQuestion;
     }
 
+    public function getCorrection(): string {
+        return $this->correction;
+    }
+
     public function getIdQuiz(): int {
         return $this->idQuiz;
     }
@@ -46,13 +51,17 @@ class Question extends BDD {
         $this->typeQuestion = $newTypeQuestion;
     }
 
+    public function setCorrection(string $newCorrection): void {
+        $this->correction = $newCorrection;
+    }
+
     // -------------------------------------- Méthodes CRUD ------------------------------------
 
     // Fonction pour créer une question dans BDD
     private function createQuestion(): bool {
-        $sql = "INSERT INTO questions (libelleQuestion, typeQuestion, idQuiz) VALUES (:libelleQuestion, :typeQuestion, :idQuiz)";
+        $sql = "INSERT INTO questions (libelleQuestion, typeQuestion, correction, idQuiz) VALUES (:libelleQuestion, :typeQuestion, :correction, :idQuiz)";
         $query = $this->pdo->prepare($sql);
-        $success = $query->execute([':libelleQuestion' => $this->libelleQuestion, ':typeQuestion' => $this->typeQuestion, ':idQuiz' => $this->idQuiz]);
+        $success = $query->execute([':libelleQuestion' => $this->libelleQuestion, ':typeQuestion' => $this->typeQuestion, ':correction' => $this->correction, ':idQuiz' => $this->idQuiz]);
         if ($success) {
             $this->id = $this->pdo->lastInsertId();
         }
@@ -64,9 +73,9 @@ class Question extends BDD {
         if (!$this->id) {
             return false;
         }
-        $sql = "UPDATE questions SET libelleQuestion = :libelleQuestion, typeQuestion = :typeQuestion WHERE id = :id";
+        $sql = "UPDATE questions SET libelleQuestion = :libelleQuestion, typeQuestion = :typeQuestion, correction = :correction WHERE id = :id";
         $query = $this->pdo->prepare($sql);
-        return $query->execute([':libelleQuestion' => $this->libelleQuestion,':typeQuestion' => $this->typeQuestion,':id' => $this->id]);
+        return $query->execute([':libelleQuestion' => $this->libelleQuestion,':typeQuestion' => $this->typeQuestion,':correction' => $this->correction,':id' => $this->id]);
     }
 
     // Fonction pour supprimer une question dans BDD
@@ -99,7 +108,7 @@ class Question extends BDD {
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $questions = [];
         foreach ($rows as $row) {
-            $questions[] = new Question($row['libelleQuestion'], $row['typeQuestion'], $row['idQuiz'], $row['id']);
+            $questions[] = new Question($row['libelleQuestion'], $row['typeQuestion'], $row['correction'], $row['idQuiz'], $row['id']);
         }
         return $questions;
     }
@@ -114,7 +123,7 @@ class Question extends BDD {
         if (!$row){
             return null;
         }
-        return new Question($row['libelleQuestion'], $row['typeQuestion'], $row['idQuiz'], $row['id']);
+        return new Question($row['libelleQuestion'], $row['typeQuestion'], $row['correction'], $row['idQuiz'], $row['id']);
     }
 
     // Fonction pour récupérer les réponses d'une question en particulier

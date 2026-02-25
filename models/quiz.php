@@ -179,7 +179,7 @@ class Quiz extends BDD {
         $results = $query->fetchAll(PDO::FETCH_ASSOC);
         $questionList = [];
         foreach ($results as $row) {
-            $questionList[] = new Question($row['libelleQuestion'],$row['typeQuestion'],$row['idQuiz'],$row['id']);
+            $questionList[] = new Question($row['libelleQuestion'],$row['typeQuestion'],$row['correction'],$row['idQuiz'],$row['id']);
         }
         return $questionList;
     }
