@@ -1,5 +1,6 @@
 <?php
 require_once '../config/bdd.php';
+require_once 'reponse.php';
 
 class Question extends BDD {
 
@@ -114,6 +115,22 @@ class Question extends BDD {
             return null;
         }
         return new Question($row['libelleQuestion'], $row['typeQuestion'], $row['idQuiz'], $row['id']);
+    }
+
+    // Fonction pour récupérer les réponses d'une question en particulier
+    public function getAnswers(): array{
+        if (!$this->id) {
+            return [];
+        }
+        $sql = "SELECT * FROM reponses WHERE idQuestion = :idQuestion";
+        $query = $this->pdo->prepare($sql);
+        $query->execute([':idQuestion' => $this->id]);
+        $results = $query->fetchAll(PDO::FETCH_ASSOC);
+        $reponsesList = [];
+        foreach ($results as $row) {
+            $reponsesList[] = new Reponse($row['libelleReponse'],$row['verite'],$row['idQuestion'],$row['id']);
+        }
+        return $reponsesList;
     }
 
 }

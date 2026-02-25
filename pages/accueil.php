@@ -39,7 +39,7 @@ $quizList = Quiz::getAll();
                         <p>' . $quiz->countQuestions() .  ' questions</p>
                         <span class="badge ' . strtolower($quiz->getDifficulte()) . '">' . $quiz->getDifficulte() . '</span>
                     </div>
-                    <a href="quiz.php?id=' . $quiz->getId() .  '"class="btn">
+                    <a href="qcm.php?id=' . $quiz->getId() . '&number=0" class="btn">
                         <i class="fa-solid fa-bolt"></i>
                         <p>Jouer</p>
                     </a>

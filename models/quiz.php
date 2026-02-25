@@ -1,5 +1,6 @@
 <?php
 require_once '../config/bdd.php';
+require_once 'question.php';
 
 class Quiz extends BDD {
 
