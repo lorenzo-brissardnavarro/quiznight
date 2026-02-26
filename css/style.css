@@ -582,9 +582,27 @@ form{
 }
 
 .delete-btn {
-    background: rgba(236, 72, 153, 0.2);
-  color: var(--rose);
-  border: 1px solid var(--rose);
+   background: rgba(236, 72, 153, 0.2);
+    border: 1px solid var(--rose);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 9px 13px;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.3s;
+    color: var(--gris-clair);
+}
+
+.delete-btn p{
+  color: var(--gris-clair);
+  margin: 0;
+}
+
+.delete-btn i{
+  font-size: 18px;
 }
 
 .delete-btn:hover {

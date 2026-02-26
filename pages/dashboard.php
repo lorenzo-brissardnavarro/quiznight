@@ -9,13 +9,35 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-if (!isset($_SESSION['role']) || $_SESSION['admin'] !== "admin") {
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== "admin") {
     header("Location: accueil.php");
     exit;
 }
 
 $quizList = Quiz::getAll();
 
+if (!empty($_POST['delete_id'])) {
+    $deleteQuiz = Quiz::getById($_POST['delete_id']);
+    if ($deleteQuiz) {
+        $questionsList = $deleteQuiz->getQuestions();
+        foreach ($questionsList as $question) {
+            $answers = $question->getAnswers();
+            foreach ($answers as $answer) {
+                $answer->deleteReponse();
+            }
+            $question->deleteQuestion();
+        }
+        $success = $deleteQuiz->delete();
+        if ($success) {
+            header("Location: dashboard.php");
+            exit;
+        } else {
+            echo "Erreur lors de la suppression du quiz.";
+        }
+    } else {
+        echo "Quiz introuvable.";
+    }
+}
 
 ?>
 <section class="dashboard">
@@ -59,10 +81,13 @@ $quizList = Quiz::getAll();
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     <p>Modifier</p>
                                 </a>
-                                <a href="#" class="delete-btn">
-                                    <i class="fa-solid fa-trash"></i>
-                                    <p>Supprimer</p>
-                                </a>
+                                <form method="POST">
+                                    <input type="hidden" name="delete_id" value="' . $quiz->getId() . '">
+                                    <button type="submit" class="delete-btn">
+                                        <i class="fa-solid fa-trash"></i>
+                                        <p>Supprimer</p>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

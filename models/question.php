@@ -79,7 +79,7 @@ class Question extends BDD {
     }
 
     // Fonction pour supprimer une question dans BDD
-    public function delete(): bool {
+    public function deleteQuestion(): bool {
         if (!$this->id) {
             return false;
         }

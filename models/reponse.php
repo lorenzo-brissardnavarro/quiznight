@@ -69,7 +69,7 @@ class Reponse extends BDD {
     }
 
     // Fonction pour supprimer une réponse dans BDD
-    public function delete(): bool {
+    public function deleteReponse(): bool {
         if (!$this->id) {
             return false;
         }
