@@ -435,9 +435,22 @@ form{
     cursor: pointer;
 }
 
+.create-quiz a{
+  color: var(--bleu);
+}
+
 #radio {
   width: auto;
   margin-bottom: 0;
+}
+
+.questions-list{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--gris-clair);
+    padding: 1em;
+    border-radius: 15px;
+    margin-bottom: 1em;
 }
 
 /* =========================

@@ -2,7 +2,6 @@
 include '../includes/header.php';
 require_once '../config/bdd.php';
 require_once '../models/quiz.php';
-require_once '../models/question.php';
 
 $quiz = Quiz::getById((int)$_GET['id']);
 
@@ -11,36 +10,45 @@ if (!$quiz) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $question = new Question(htmlspecialchars($_POST['libelle']), $_POST['type'],$_POST["correction"],$quiz->getId());
-    $question->saveQuestion();
-    header("Location: add_answers.php?idQuestion=" . $question->getId());
+    $quiz->setTitre(htmlspecialchars($_POST['titre']));
+    $quiz->setDescription(htmlspecialchars($_POST['description']));
+    $quiz->setDifficulte($_POST['difficulte']);
+    $quiz->update();
+    header("Location: edit_quiz.php?id=" . $quiz->getId());
     exit;
 }
 ?>
 
+
+
 <form method="POST" class="create-quiz">
-    <h2>Ajouter une question au quiz : <?php echo $quiz->getTitre(); ?></h2>
-    <input type="text" name="libelle" placeholder="Libellé question" required>
-    <select name="type">
-        <option value="qcm">QCM</option>
-        <option value="vf">Vrai / Faux</option>
+    <h2>Modifier Quiz</h2>
+    <input type="text" name="titre" value="<?php echo $quiz->getTitre(); ?>" required>
+    <textarea name="description"><?php echo $quiz->getDescription(); ?></textarea>
+
+    <select name="difficulte">
+        <option value="facile" <?php if($quiz->getDifficulte()=="facile") echo "selected"; ?>>Facile</option>
+        <option value="moyen" <?php if($quiz->getDifficulte()=="moyen") echo "selected"; ?>>Moyen</option>
+        <option value="difficile" <?php if($quiz->getDifficulte()=="difficile") echo "selected"; ?>>Difficile</option>
     </select>
-    <textarea name="correction" placeholder="Saisissez la phrase de correction de la question"></textarea>
-    <button type="submit">Créer la question</button>
+    <button type="submit">Mettre à jour</button>
     <section>
-        <h3>Questions existantes :</h3>
+        <h3>Questions</h3>
         <ul>
         <?php
-        $questions = $quiz->getQuestions();
-
-        foreach ($questions as $q) {
-            echo '<li>' . htmlspecialchars($q->getLibelleQuestion()) . '</li>';
+        foreach ($quiz->getQuestions() as $question) {
+            echo "<li class='questions-list'>";
+            echo $question->getLibelleQuestion();
+            echo " 
+            <a href='edit_question.php?id=".$question->getId()."'>Modifier</a> 
+            <a href='delete_question.php?id=".$question->getId()."'>Supprimer</a>";
+            echo "</li>";
         }
-        ?>
+        ?> 
         </ul>
+        <a href="add_questions.php?idQuiz=<?php echo $quiz->getId(); ?>">Ajouter une question</a>
     </section>
 </form>
-
 
 
 

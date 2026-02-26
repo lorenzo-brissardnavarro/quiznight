@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $quiz = new Quiz(htmlspecialchars($_POST['titre']),htmlspecialchars($_POST['description']),"",$_POST['difficulte']);
         $quiz->imageProcessing($_FILES);
         $quiz->create();
-        header("Location: edit_quiz.php?id=" . $quiz->getId());
+        header("Location: add_questions.php?id=" . $quiz->getId());
         exit;
     }
 }

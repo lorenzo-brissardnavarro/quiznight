@@ -77,7 +77,7 @@ if (!empty($_POST['delete_id'])) {
                                 <p class="questions">' . $quiz->countQuestions() .  ' questions</p>
                             </div>
                             <div class="quiz-actions">
-                                <a href="#" class="modify-btn">
+                                <a href="edit_quiz.php?id=' . $quiz->getId() . '" class="modify-btn">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                     <p>Modifier</p>
                                 </a>

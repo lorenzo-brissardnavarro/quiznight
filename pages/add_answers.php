@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $repVrai->saveReponse();
         $repFaux->saveReponse();
     }
-    header("Location: edit_quiz.php?id=" . $question->getIdQuiz());
+    header("Location: add_questions.php?id=" . $question->getIdQuiz());
     exit;
 }
 ?>
@@ -45,18 +45,11 @@ if ($question->getTypeQuestion() === 'qcm') {
     }
 
 } else {
-
-    echo '<label>';
-    echo '<input type="radio" name="bonne_reponse" value="vrai" required id="radio"> Vrai';
-    echo '</label>';
-
-    echo '<label>';
-    echo '<input type="radio" name="bonne_reponse" value="faux" id="radio"> Faux';
-    echo '</label>';
+    echo '<label><input type="radio" name="bonne_reponse" value="vrai" required id="radio"> Vrai</label>
+        <label><input type="radio" name="bonne_reponse" value="faux" id="radio"> Faux</label>';
 }
-
-echo '<button type="submit">Enregistrer les réponses</button>';
-echo '</form>';
+echo '<button type="submit">Enregistrer les réponses</button>
+    </form>';
 ?>
 
 <?php include '../includes/footer.php'; ?>
