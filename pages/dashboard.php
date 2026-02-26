@@ -46,7 +46,7 @@ if (!empty($_POST['delete_id'])) {
             <h1>Dashboard Admin</h1>
             <p>Gérer vos quiz et créez de nouveaux défis pour la communauté !</p>
         </div>
-        <a href="#" class="create-btn">
+        <a href="create_quiz.php" class="create-btn">
             <i class="fa-solid fa-circle-plus"></i>
             <p>Créer un Quiz</p>
         </a>

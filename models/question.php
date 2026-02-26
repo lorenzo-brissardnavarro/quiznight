@@ -7,6 +7,7 @@ class Question extends BDD {
     private ?int $id;
     private string $libelleQuestion;
     private string $typeQuestion;
+    private string $correction;
     private int $idQuiz;
 
     public function __construct(string $libelleQuestion, string $typeQuestion, string $correction, int $idQuiz, ?int $id = null){

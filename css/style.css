@@ -403,6 +403,43 @@ form{
     border: 1px solid var(--rose);
 }
 
+.create-quiz{
+  background: var(--bg-card);
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.create-quiz input,
+.create-quiz textarea,
+.create-quiz select{
+  width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+}
+
+.create-quiz button{
+  background: var(--gradient-main);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+#radio {
+  width: auto;
+  margin-bottom: 0;
+}
+
 /* =========================
    DASHBOARD ADMIN
 ========================= */
@@ -752,6 +789,10 @@ form{
 .correct {
     border: 2px solid #097237;
     background-color: #111b20;
+}
+
+#correct{
+  border: 2px solid #097237;
 }
 
 .incorrect {
