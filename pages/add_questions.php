@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ?>
         </ul>
     </section>
+    <a href="edit_quiz.php?id=<?php echo $quiz->getId(); ?>">Retour à la gestion du quiz</a>
 </form>
 
 

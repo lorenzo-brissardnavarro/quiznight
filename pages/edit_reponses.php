@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_reponses'])) {
         $rep = Reponse::getReponseById((int)$idRep);
         if ($rep) {
             $rep->setLibelleReponse(htmlspecialchars($libelle));
-            $rep->update();
+            $rep->saveReponse();
         }
     }
     header("Location: edit_reponses.php?idQuestion=" . $question->getId());

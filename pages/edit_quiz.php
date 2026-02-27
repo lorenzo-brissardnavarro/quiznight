@@ -27,9 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <textarea name="description"><?php echo $quiz->getDescription(); ?></textarea>
 
     <select name="difficulte">
-        <option value="facile" <?php if($quiz->getDifficulte()=="facile") echo "selected"; ?>>Facile</option>
-        <option value="moyen" <?php if($quiz->getDifficulte()=="moyen") echo "selected"; ?>>Moyen</option>
-        <option value="difficile" <?php if($quiz->getDifficulte()=="difficile") echo "selected"; ?>>Difficile</option>
+        <option value="facile" <?php if($quiz->getDifficulte()=="Facile") echo "selected"; ?>>Facile</option>
+        <option value="moyen" <?php if($quiz->getDifficulte()=="Moyen") echo "selected"; ?>>Moyen</option>
+        <option value="difficile" <?php if($quiz->getDifficulte()=="Difficile") echo "selected"; ?>>Difficile</option>
     </select>
     <button type="submit">Mettre à jour</button>
     <section>

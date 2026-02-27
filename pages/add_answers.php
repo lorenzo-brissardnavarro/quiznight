@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $repVrai->saveReponse();
         $repFaux->saveReponse();
     }
-    header("Location: add_questions.php?id=" . $question->getIdQuiz());
+    header("Location: add_questions.php?idQuiz=" . $question->getIdQuiz());
     exit;
 }
 ?>
