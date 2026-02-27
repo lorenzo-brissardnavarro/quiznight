@@ -3,6 +3,16 @@ include '../includes/header.php';
 require_once '../config/bdd.php';
 require_once '../models/question.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: accueil.php");
+    exit;
+}
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== "admin") {
+    header("Location: accueil.php");
+    exit;
+}
+
 $question = Question::getById((int)$_GET['id']);
 
 if (!$question) {

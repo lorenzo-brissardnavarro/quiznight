@@ -3,6 +3,16 @@ include '../includes/header.php';
 require_once '../config/bdd.php';
 require_once '../models/quiz.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: accueil.php");
+    exit;
+}
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== "admin") {
+    header("Location: accueil.php");
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if(!empty($_POST['titre']) && !empty($_POST['description']) && !empty($_POST['difficulte']) && !empty($_FILES)){
         $quiz = new Quiz(htmlspecialchars($_POST['titre']),htmlspecialchars($_POST['description']),"",$_POST['difficulte']);

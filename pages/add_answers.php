@@ -4,6 +4,16 @@ require_once '../config/bdd.php';
 require_once '../models/question.php';
 require_once '../models/reponse.php';
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: accueil.php");
+    exit;
+}
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== "admin") {
+    header("Location: accueil.php");
+    exit;
+}
+
 $question = Question::getById((int)$_GET['idQuestion']);
 
 if (!$question) {

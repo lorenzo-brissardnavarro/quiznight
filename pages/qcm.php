@@ -3,6 +3,7 @@
 include '../includes/header.php';
 require_once '../config/bdd.php';
 require_once '../models/quiz.php';
+require_once '../models/question.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: connexion.php");
@@ -49,13 +50,37 @@ if (!$current_quiz) {
     die("Quiz introuvable.");
 }
 
-$questionsList = $current_quiz->getQuestions();
-
-if (!isset($questionsList[$question_number])) {
-    die("Question introuvable.");
+if (!isset($_SESSION['questions_order']) || ($question_number === 0 && $selected_answer_id === null)) {
+    $questions = $current_quiz->getQuestions();
+    $questionIds = [];
+    foreach ($questions as $question) {
+        $questionIds[] = $question->getId();
+    }
+    shuffle($questionIds);
+    $_SESSION['questions_order'] = $questionIds;
 }
-$current_question = $questionsList[$question_number];
+$questionsOrder = $_SESSION['questions_order'];
+
+$current_question_id = $questionsOrder[$question_number];
+$current_question = Question::getById($current_question_id);
+
 $answers = $current_question->getAnswers();
+
+if (!isset($_SESSION['answers_order'])) {
+    $_SESSION['answers_order'] = [];
+}
+
+if (!isset($_SESSION['answers_order']) || !isset($_SESSION['last_question_number']) || $_SESSION['last_question_number'] !== $question_number) {
+    $answerIds = [];
+    foreach ($answers as $answer) {
+        $answerIds[] = $answer->getId();
+    }
+    shuffle($answerIds);
+    $_SESSION['answers_order'] = $answerIds;
+    $_SESSION['last_question_number'] = $question_number;
+}
+$answersOrder = $_SESSION['answers_order'];
+
 
 $correction_text = null;
 if ($selected_answer_id !== null) {
@@ -101,7 +126,14 @@ if ($selected_answer_id !== null) {
         <div class="qcm-info">
             <div class="qcm-info-text">
                 <?php
-                foreach ($answers as $answer) {
+                foreach ($answersOrder as $answer_id) {
+                    $answer = null;
+                    foreach ($answers as $a) {
+                        if ($a->getId() === $answer_id) {
+                            $answer = $a;
+                            break;
+                        }
+                    }
                     $class = "qcm-option";
                     if ($selected_answer_id !== null) {
                         if ($answer->getVerite()) {
@@ -147,6 +179,8 @@ if ($selected_answer_id !== null) {
                 </div>';
             unset($_SESSION['answered']);
             unset($_SESSION['quiz_score']);
+            unset($_SESSION['questions_order']);
+            unset($_SESSION['answers_shuffled']);
         }
     }
     ?>
