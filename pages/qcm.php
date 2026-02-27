@@ -66,8 +66,16 @@ $current_question = Question::getById($current_question_id);
 
 $answers = $current_question->getAnswers();
 
+if (!$current_question) {
+    die("Question introuvable.");
+}
+
 if (!isset($_SESSION['answers_order'])) {
     $_SESSION['answers_order'] = [];
+}
+
+if($question_number === 0 && $selected_answer_id === null){
+    unset($_SESSION['answers_order']);
 }
 
 if (!isset($_SESSION['answers_order']) || !isset($_SESSION['last_question_number']) || $_SESSION['last_question_number'] !== $question_number) {
@@ -80,7 +88,6 @@ if (!isset($_SESSION['answers_order']) || !isset($_SESSION['last_question_number
     $_SESSION['last_question_number'] = $question_number;
 }
 $answersOrder = $_SESSION['answers_order'];
-
 
 $correction_text = null;
 if ($selected_answer_id !== null) {
@@ -134,6 +141,9 @@ if ($selected_answer_id !== null) {
                             break;
                         }
                     }
+                    if (!$answer) {
+                        continue;
+                    }
                     $class = "qcm-option";
                     if ($selected_answer_id !== null) {
                         if ($answer->getVerite()) {
@@ -180,7 +190,7 @@ if ($selected_answer_id !== null) {
             unset($_SESSION['answered']);
             unset($_SESSION['quiz_score']);
             unset($_SESSION['questions_order']);
-            unset($_SESSION['answers_shuffled']);
+            unset($_SESSION['answers_order']);
         }
     }
     ?>
