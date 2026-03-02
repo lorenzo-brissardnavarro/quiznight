@@ -14,7 +14,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== "admin") {
     exit;
 }
 
-$quiz = Quiz::getById((int)$_GET['idQuiz']);
+$quiz = Quiz::getById((int)$_GET['id']);
 
 if (!$quiz) {
     die("Quiz introuvable");
